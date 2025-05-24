@@ -8,7 +8,7 @@ function App() {
   const [to, setTo] = useState("usd"); // Target currency
   const [amount, setAmount] = useState(NaN); // Amount to convert
   const [convertedAmount, setConvertedAmount] = useState(NaN); // Converted amount
-  const [copied, setCopied] = useState(false); // State for swap confirmation animation
+  const [swapped, setSwapped] = useState(false); // State for swap confirmation animation
   const [converted, setConverted] = useState(false); // State for conversion confirmation
 
   // Fetching currency information for the selected "from" currency
@@ -23,9 +23,9 @@ function App() {
     setAmount(convertedAmount);
 
     // Show temporary feedback for the swap action
-    setCopied(true);
+    setSwapped(true);
     setTimeout(() => {
-      setCopied(false);
+      setSwapped(false);
     }, 400);
   };
 
@@ -66,7 +66,7 @@ function App() {
 
             {/* Swap button to exchange source and target currencies */}
             <button onClick={swap} className="bg-blue-500 w-16 rounded-md absolute top-[120px] h-[36px] flex justify-center items-center pb-1 hover:bg-blue-400 duration-200">
-              <p>{copied ? '✓' : 'swap'}</p>
+              <p>{swapped ? '✓' : 'swap'}</p>
             </button>
 
             {/* Input box for the target currency (disabled for user input) */}
