@@ -18,12 +18,11 @@ export class Service{
     }
 
     async createPost({content, featuredImage, title, userId, status, slug}){
-
         try {
-            return await this.databases.createDocument(
+            const result = await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                slug,
+                ID.unique(),
                 {
                     title,
                     status,
@@ -31,10 +30,11 @@ export class Service{
                     content,
                     userId
                 }
-
-            )
+            );
+            
+            return result;
         } catch (error) {
-            console.log("Appwrite service :: createPost :: error", error);
+            throw error;
         }
     }
 
@@ -53,7 +53,7 @@ export class Service{
                 }
             )
         } catch (error) {
-            console.log("Appwrite service :: updatePost :: error", error);
+            throw error;
         }
     }
 
@@ -66,7 +66,6 @@ export class Service{
             )
             return true;
         } catch (error) {
-            console.log("Appwrite service :: deletePost :: error", error);
             return false;
         }
     }
@@ -79,35 +78,35 @@ export class Service{
                 slug
             )
         } catch (error) {
-            console.log("Appwrite service :: getPost :: error", error);
             return false;
         }
     }
 
     async getPosts(queries = [Query.equal("status", "active")]){
         try {
-            return await this.databases.listDocuments(
+            const result = await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 queries
-            )
+            );
+            
+            return result;
         } catch (error) {
-            console.log("Appwrite service :: getPosts :: error", error);
             return false;
         }
     }
 
-
     async uploadFile(file){
         try {
-            return await this.bucket.createFile(
+            const result = await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
                 file
-            )
+            );
+            
+            return result;
         } catch (error) {
-            console.log("Appwrite service :: uploadFile :: error", error);
-            return false;
+            throw error;
         }
     }
 
@@ -119,7 +118,6 @@ export class Service{
             )
             return true;
         } catch (error) {
-            console.log("Appwrite service :: deleteFile :: error", error);
             return false;
         }
     }

@@ -1,7 +1,9 @@
 {
-  "name": "megablog",
+  "name": "blogsphere",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "BlogSphere - A modern blog platform built by Kartavya Sandhu",
+  "author": "Kartavya Sandhu <kartavyasandhu1@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",

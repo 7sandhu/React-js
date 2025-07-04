@@ -19,20 +19,29 @@ function App() {
         dispatch(logout())
       }
     })
+    .catch(() => {
+      dispatch(logout())
+    })
     .finally(() => setLoading(false))
   }, [])
   
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
-      <div className='w-full block'>
-        <Header />
-        <main>
-        TODO:  <Outlet />
-        </main>
-        <Footer />
+    <div className='min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50'>
+      <Header />
+      <main className='flex-1'>
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  ) : (
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50'>
+      <div className='text-center'>
+        <div className='spinner h-16 w-16 mx-auto mb-6'></div>
+        <h2 className='text-2xl font-semibold text-gray-700 mb-2'>Loading BlogSphere</h2>
+        <p className='text-gray-500'>Please wait while we set things up...</p>
       </div>
     </div>
-  ) : null
+  )
 }
 
 export default App

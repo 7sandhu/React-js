@@ -9,11 +9,13 @@ import {useForm} from 'react-hook-form'
 function Signup() {
     const navigate = useNavigate()
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
-    const {register, handleSubmit} = useForm()
+    const {register, handleSubmit, formState: {errors}} = useForm()
 
     const create = async(data) => {
         setError("")
+        setLoading(true)
         try {
             const userData = await authService.createAccount(data)
             if (userData) {
@@ -23,64 +25,135 @@ function Signup() {
             }
         } catch (error) {
             setError(error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
   return (
-    <div className="flex items-center justify-center">
-            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-            <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
-                    </span>
+    <div className='min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center py-12 px-4'>
+        <div className="w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <div className="flex justify-center mb-6">
+                        <Logo width="200px" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-gray-900 font-playfair">Join BlogSphere</h2>
+                    <p className="mt-2 text-gray-600">
+                        Already have an account?{' '}
+                        <Link
+                            to="/login"
+                            className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                        >
+                            Sign in
+                        </Link>
+                    </p>
                 </div>
-                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
-                <p className="mt-2 text-center text-base text-black/60">
-                    Already have an account?&nbsp;
-                    <Link
-                        to="/login"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
-                    >
-                        Sign In
-                    </Link>
-                </p>
-                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
 
-                <form onSubmit={handleSubmit(create)}>
-                    <div className='space-y-5'>
-                        <Input
-                        label="Full Name: "
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="flex items-center">
+                            <svg className="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            <span className="text-red-700 text-sm">{error}</span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Signup Form */}
+                <form onSubmit={handleSubmit(create)} className="space-y-6">
+                    <Input
+                        label="Full Name"
                         placeholder="Enter your full name"
+                        error={errors.name?.message}
+                        icon={
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        }
                         {...register("name", {
-                            required: true,
-                        })}
-                        />
-                        <Input
-                        label="Email: "
-                        placeholder="Enter your email"
-                        type="email"
-                        {...register("email", {
-                            required: true,
-                            validate: {
-                                matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                "Email address must be a valid address",
+                            required: "Full name is required",
+                            minLength: {
+                                value: 2,
+                                message: "Name must be at least 2 characters"
                             }
                         })}
-                        />
-                        <Input
-                        label="Password: "
+                    />
+                    
+                    <Input
+                        label="Email Address"
+                        placeholder="Enter your email"
+                        type="email"
+                        error={errors.email?.message}
+                        icon={
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                            </svg>
+                        }
+                        {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                                value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                message: "Please enter a valid email address"
+                            }
+                        })}
+                    />
+                    
+                    <Input
+                        label="Password"
                         type="password"
-                        placeholder="Enter your password"
+                        placeholder="Create a password"
+                        error={errors.password?.message}
+                        icon={
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        }
                         {...register("password", {
-                            required: true,})}
-                        />
-                        <Button type="submit" className="w-full">
-                            Create Account
-                        </Button>
-                    </div>
-                </form>
-            </div>
+                            required: "Password is required",
+                            minLength: {
+                                value: 8,
+                                message: "Password must be at least 8 characters"
+                            }
+                        })}
+                    />
 
+                    <Button
+                        type="submit"
+                        className="w-full py-3 text-lg"
+                        disabled={loading}
+                        variant="primary"
+                    >
+                        {loading ? (
+                            <div className="flex items-center justify-center">
+                                <div className="spinner w-5 h-5 mr-2"></div>
+                                Creating Account...
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center">
+                                <span>Create Account</span>
+                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                        )}
+                    </Button>
+                </form>
+
+                {/* Footer */}
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-gray-500">
+                        By creating an account, you agree to our{' '}
+                        <a href="#" className="text-blue-600 hover:text-blue-700">Terms of Service</a>
+                        {' '}and{' '}
+                        <a href="#" className="text-blue-600 hover:text-blue-700">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
   )
 }
