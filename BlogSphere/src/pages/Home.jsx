@@ -49,8 +49,15 @@ function Home() {
     }
 
     if (error) {
-        // If not logged in and error is 401, show login prompt
-        if (!authStatus && (error.includes('401') || error.toLowerCase().includes('unauthorized'))) {
+        // If not logged in and error is 401, unauthorized, or failed to fetch posts, show login prompt
+        const errorStr = String(error).toLowerCase();
+        if (
+            !authStatus && (
+                errorStr.includes('401') ||
+                errorStr.includes('unauthorized') ||
+                errorStr.includes('failed to fetch posts')
+            )
+        ) {
             return (
                 <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
                     <Container>
@@ -87,12 +94,6 @@ function Home() {
                         <p className="text-gray-600 mb-8">
                             {error}
                         </p>
-                        <button 
-                            onClick={() => window.location.reload()}
-                            className="btn-primary"
-                        >
-                            Try Again
-                        </button>
                     </div>
                 </Container>
             </div>
