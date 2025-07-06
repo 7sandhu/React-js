@@ -1,17 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import appwriteService from "../appwrite/config"
 import {Link} from 'react-router-dom'
 
 function PostCard({$id, title, featuredImage, content, userId}) {
+    const placeholder = "https://placehold.co/600x400?text=No+Image";
+    const [imageUrl, setImageUrl] = useState(placeholder);
+
+    useEffect(() => {
+        if (featuredImage) {
+            try {
+                const preview = appwriteService.getFilePreview(featuredImage);
+                if (typeof preview === 'string') {
+                    setImageUrl(preview);
+                } else if (typeof preview === 'object' && typeof preview.toString === 'function') {
+                    setImageUrl(preview.toString());
+                } else if (preview instanceof Promise) {
+                    preview.then(url => setImageUrl(url.toString())).catch(() => setImageUrl(placeholder));
+                }
+            } catch {
+                setImageUrl(placeholder);
+            }
+        } else {
+            setImageUrl(placeholder);
+        }
+    }, [featuredImage]);
     
   return (
     <Link to={`/post/${$id}`}>
         <div className='group w-full bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden border border-gray-100'>
             <div className='relative overflow-hidden'>
                 <img 
-                    src={appwriteService.getFilePreview(featuredImage)} 
+                    src={imageUrl} 
                     alt={title}
                     className='w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110' 
+                    onError={e => { e.target.onerror = null; e.target.src = placeholder; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
@@ -21,16 +43,13 @@ function PostCard({$id, title, featuredImage, content, userId}) {
                 </h2>
                 {content && (
                     <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                        {content.replace(/<[^>]*>/g, '').substring(0, 120)}...
+                        {(() => {
+                            const plain = content.replace(/<[^>]*>/g, '');
+                            return plain.length > 20 ? plain.substring(0, 20) + '...' : plain;
+                        })()}
                     </p>
                 )}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center text-sm text-gray-500">
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>5 min read</span>
-                    </div>
                     <div className="flex items-center text-blue-600 font-medium text-sm">
                         <span>Read more</span>
                         <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
