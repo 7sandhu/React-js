@@ -49,6 +49,29 @@ function Home() {
     }
 
     if (error) {
+        // If not logged in and error is 401, show login prompt
+        if (!authStatus && (error.includes('401') || error.toLowerCase().includes('unauthorized'))) {
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+                    <Container>
+                        <div className="text-center max-w-md mx-auto">
+                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 01-8 0 4 4 0 018 0zm-4 4v2m0 4h.01" />
+                                </svg>
+                            </div>
+                            <h1 className="text-3xl font-bold text-blue-600 mb-4 font-playfair">
+                                Login to Read Posts
+                            </h1>
+                            <p className="text-gray-600 mb-8">
+                                Please <Link to="/login" className="text-blue-500 underline">login</Link> to view posts.
+                            </p>
+                            <Link to="/login" className="btn-primary">Login</Link>
+                        </div>
+                    </Container>
+                </div>
+            );
+        }
         return (
             <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 flex items-center justify-center">
                 <Container>

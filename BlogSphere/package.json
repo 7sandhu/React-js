@@ -5,11 +5,14 @@
   "description": "BlogSphere - A modern blog platform built by Kartavya Sandhu",
   "author": "Kartavya Sandhu <kartavyasandhu1@gmail.com>",
   "type": "module",
+  "homepage": "https://7sandhu.github.io/React-js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist -b gh-pages -r https://github.com/7sandhu/React-js.git"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",

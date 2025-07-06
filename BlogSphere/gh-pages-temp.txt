@@ -1,0 +1,18 @@
+1. Install gh-pages:
+npm install gh-pages --save-dev
+
+2. Add to package.json:
+- Add homepage: "https://7sandhu.github.io/React-js/BlogSphere"
+- Add scripts:
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+
+3. Run:
+npm run deploy
+
+4. On GitHub, set Pages source to gh-pages branch, / (root) or /BlogSphere if available.
+
+Your app will be live at:
+https://7sandhu.github.io/React-js/BlogSphere/
+
+If you want, I can edit your package.json for you. Let me know!
