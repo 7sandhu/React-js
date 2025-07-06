@@ -112,37 +112,13 @@ export default function Post() {
                         </div>
 
                         {/* Featured Image */}
-                        <div className="relative mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                        <div className="relative mb-8 rounded-2xl overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center mx-auto" style={{height: '320px', width: '100%', maxWidth: '600px'}}>
                             <img
-                                src={appwriteService.getFilePreview(post.featuredImage)}
+                                src={appwriteService.getFileView(post.featuredImage)}
                                 alt={post.title}
-                                className="w-full h-96 object-cover"
+                                className="w-full h-full object-cover object-center rounded-2xl"
+                                style={{height: '320px', width: '100%', borderRadius: '1rem'}}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                            
-                            {/* Author Actions */}
-                            {isAuthor && (
-                                <div className="absolute top-6 right-6 flex space-x-3">
-                                    <Link to={`/edit-post/${post.$id}`}>
-                                        <Button variant="success" size="sm">
-                                            <div className="flex items-center space-x-1">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                                <span>Edit</span>
-                                            </div>
-                                        </Button>
-                                    </Link>
-                                    <Button variant="danger" size="sm" onClick={deletePost}>
-                                        <div className="flex items-center space-x-1">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                            <span>Delete</span>
-                                        </div>
-                                    </Button>
-                                </div>
-                            )}
                         </div>
 
                         {/* Post Header */}
@@ -153,12 +129,6 @@ export default function Post() {
                             
                             {/* Post Meta */}
                             <div className="flex items-center justify-center space-x-6 text-gray-600">
-                                <div className="flex items-center space-x-2">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span>5 min read</span>
-                                </div>
                                 <div className="flex items-center space-x-2">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -189,10 +159,10 @@ export default function Post() {
                         <div className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border border-gray-100">
                             <div className="flex items-center space-x-4">
                                 <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                                    {post.userId ? 'A' : 'U'}
+                                    {post.username ? post.username.charAt(0).toUpperCase() : (post.userId ? 'A' : 'U')}
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-gray-900">Author</h3>
+                                    <h3 className="text-xl font-semibold text-gray-900">{post.username ? post.username : 'Author'}</h3>
                                     <p className="text-gray-600">Thanks for reading this post!</p>
                                 </div>
                             </div>

@@ -97,6 +97,23 @@ export class Service{
         }
     }
 
+    async getPostsByUser(userId) {
+        try {
+            const result = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                [
+                    Query.equal("userId", userId),
+                    Query.equal("status", "active"),
+                    Query.orderDesc("$createdAt")
+                ]
+            );
+            return result.documents;
+        } catch (error) {
+            return [];
+        }
+    }
+
     async uploadFile(file){
         try {
             const result = await this.bucket.createFile(
@@ -130,6 +147,13 @@ export class Service{
             fileId
 
         )
+    }
+
+    getFileView(fileId) {
+        return this.bucket.getFileView(
+            conf.appwriteBucketId,
+            fileId
+        );
     }
 
 }
