@@ -52,16 +52,17 @@ export default function PostForm({ post }) {
                     setError("Please select an image for your post.");
                     return;
                 }
-                
                 const file = await appwriteService.uploadFile(data.image[0]);
 
                 if (file) {
                     const fileId = file.$id;
                     data.featuredImage = fileId;
-                    
+                    data.username = userData?.name || "Unknown";
+
                     const dbPost = await appwriteService.createPost({ 
                         ...data, 
-                        userId: userData.$id 
+                        userId: userData.$id, 
+                        username: data.username
                     });
 
                     if (dbPost) {

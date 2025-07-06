@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import appwriteService from "../appwrite/config"
 import {Link} from 'react-router-dom'
 
-function PostCard({$id, title, featuredImage, content, userId}) {
+function PostCard({$id, title, featuredImage, content, userId, username}) {
     const placeholder = "https://placehold.co/600x400?text=No+Image";
     const [imageUrl, setImageUrl] = useState(placeholder);
 
@@ -38,9 +38,10 @@ function PostCard({$id, title, featuredImage, content, userId}) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
             <div className="p-6">
-                <h2 className='text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 font-playfair'>
+                <h2 className='text-xl font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200 font-playfair'>
                     {title}
                 </h2>
+                <p className="text-xs text-gray-500 mb-2 font-medium">{username ? `By ${username}` : userId ? `By ${userId}` : ''}</p>
                 {content && (
                     <p className="text-gray-600 text-sm line-clamp-3 mb-4">
                         {(() => {
